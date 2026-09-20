@@ -1,8 +1,21 @@
-# 城市末端配送模拟
+# 城市末端配送模拟 · 货损认领与赔付复核
 
 - 行业：物流
-- 技术栈：Vue3、Vite、TypeScript、Element Plus、Leaflet
+- 技术栈：Vue3、Vite、TypeScript、Pinia、Element Plus
 - 启动：`npm install && npm run dev`
 - 构建：`npm run build`
 
 这是一个功能最小闭环前端项目，数据默认保存在浏览器localStorage中，方便后续扩展接口、权限、图表或地图能力。
+
+## 货损认领与赔付复核
+
+- 骑手登记破损类别、凭证编号和申报金额；同一订单待复核时，后续申请直接阻止。
+- 站点当日赔付累计触及上限后，超出部分占用待复核额度，释放超时占用后才能放行。
+- 复核通过后订单结案；补证生成带原因的新版本，旧金额和凭证清单保留。
+- 重载后认领、额度占用和版本关系一致（localStorage 持久化）。
+
+## 代码分层
+
+- `src/domain/`：赔付判断（类型、站点规则、额度评估、提交/补证/复核判定），纯函数。
+- `src/store/claimStore.ts`：订单资料与认领、额度占用状态，负责 localStorage 持久化。
+- `src/components/`：页面呈现（认领登记、复核列表与版本时间线、站点额度面板、订单资料）。
